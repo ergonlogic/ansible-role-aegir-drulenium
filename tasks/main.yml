@@ -1,0 +1,21 @@
+---
+# tasks file for ansible-role-aegir3drulenium
+- name: Switch to aegir and download Hosting Drulenium via become_user
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster dl hosting_drulenium -y
+
+- name: clear cache - drush cc drush
+  become: yes
+  become_user: aegir
+  shell: drush cc drush
+
+- name: clear cache - drush cc all
+  become: yes
+  become_user: aegir
+  shell: drush cc all
+
+- name: drush @hostmaster hosting-tasks --debug
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster hosting-tasks --debug
