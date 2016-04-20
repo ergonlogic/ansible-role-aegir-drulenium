@@ -3,7 +3,19 @@
 - name: Switch to aegir and download Hosting Drulenium via become_user
   become: yes
   become_user: aegir
-  shell: drush @hostmaster dl hosting_drulenium -y
+  shell: drush @hostmaster dl libraries -y
+
+- name: Switch to aegir and download Hosting Drulenium via become_user
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+
+## Selenium web driver needs installation
+
+- name: Switch to aegir and download Hosting Drulenium via become_user
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
 
 - name: clear cache - drush cc drush
   become: yes
