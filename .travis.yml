@@ -6,6 +6,7 @@ env:
   - ANSIBLE_VERSION=1.6
   - ANSIBLE_VERSION=1.7
   - ANSIBLE_VERSION=1.8
+  - ANSIBLE_VERSION=2.0.0.1
 
 before_install:
   - sudo apt-get update -qq
