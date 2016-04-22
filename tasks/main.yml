@@ -3,19 +3,41 @@
 - name: Switch to aegir and download Hosting Drulenium via become_user
   become: yes
   become_user: aegir
-  shell: drush @hostmaster dl libraries -y
+  shell: drush @hostmaster dl diff number libraries taxonomy -y
+
+- name: Enable Diff Number Libraries via Drush
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster en diff number libraries taxonomy -y
+
+  ## Selenium web driver needs installation
+- name: Unarchive Selenium
+  become: yes
+  become_user: aegir
+  # Unarchive a file that needs to be downloaded (added in 2.0)
+  unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver copy=no
+
+- name: Switch to aegir and download Hosting Drulenium via become_user
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
+
+## vset Drulenium settings for Ubuntu 14
 
 - name: Switch to aegir and download Hosting Drulenium via become_user
   become: yes
   become_user: aegir
   shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
 
-## Selenium web driver needs installation
-
-- name: Switch to aegir and download Hosting Drulenium via become_user
+- name: Switch to aegir and enable Drulenium
   become: yes
   become_user: aegir
-  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
+  shell: drush @hostmaster en drulenium -y
+
+- name: Switch to aegir and enable Hosting Drulenium
+  become: yes
+  become_user: aegir
+  shell: drush @hostmaster en hosting_drulenium -y
 
 - name: clear cache - drush cc drush
   become: yes
