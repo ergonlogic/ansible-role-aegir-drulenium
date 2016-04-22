@@ -1,55 +1,60 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
 - name: Switch to aegir and download Hosting Drulenium via become_user
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster dl diff libraries -y
 
 - name: Enable Diff Number Libraries via Drush
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
+  shell: drush @hostmaster en diff number libraries taxonomy -y
+
+- name: Make libraries folder
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster en diff number libraries taxonomy -y
 
 - unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries owner=aegir copy=no
 
 - name: Move Selenium
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
 
 - name: Switch to aegir and download Hosting Drulenium
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster dl drulenium-1.0-beta22 -y
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
 - name: Switch to aegir and download Hosting Drulenium via become_user
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
 
 - name: Switch to aegir and enable Drulenium
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster en drulenium -y
 
 - name: Switch to aegir and enable Hosting Drulenium
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster en hosting_drulenium -y
 
 - name: clear cache - drush cc drush
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush cc drush
 
 - name: clear cache - drush cc all
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush cc all
 
 - name: drush @hostmaster hosting-tasks --debug
-  become: yes
-  become_user: aegir
+#  become: yes
+#  become_user: aegir
   shell: drush @hostmaster hosting-tasks --debug
