@@ -10,11 +10,9 @@
   become_user: aegir
   shell: drush @hostmaster en diff number libraries taxonomy -y
 
-  ## Selenium web driver needs installation
 - name: Unarchive Selenium
   become: yes
   become_user: aegir
-  # Unarchive a file that needs to be downloaded (added in 2.0)
   unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver copy=no
 
 - name: Switch to aegir and download Hosting Drulenium via become_user
@@ -22,7 +20,7 @@
   become_user: aegir
   shell: drush @hostmaster dl drulenium-1.0-beta22 -y
 
-## vset Drulenium settings for Ubuntu 14
+## vset Drulenium settings for Ubuntu 14 or via Feature?
 
 - name: Switch to aegir and download Hosting Drulenium via become_user
   become: yes
