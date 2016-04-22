@@ -15,7 +15,7 @@
 - name: Move Selenium
   become: yes
   become_user: aegir
-  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
 
 - name: Switch to aegir and download Hosting Drulenium
   become: yes
