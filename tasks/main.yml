@@ -3,12 +3,12 @@
 - name: Switch to aegir and download Hosting Drulenium via become_user
   become: yes
   become_user: aegir
-  shell: drush @hostmaster dl diff number libraries taxonomy -y
+  shell: drush @hostmaster dl diff libraries taxonomy -y
 
 - name: Enable Diff Number Libraries via Drush
   become: yes
   become_user: aegir
-  shell: drush @hostmaster en diff number libraries taxonomy -y
+  shell: drush @hostmaster en diff libraries taxonomy -y
 
 - name: Unarchive Selenium
   become: yes
