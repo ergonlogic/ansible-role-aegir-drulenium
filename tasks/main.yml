@@ -1,6 +1,6 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
-- name: Switch to aegir and download Hosting Drulenium via become_user
+- name: Switch to aegir and download Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
@@ -69,5 +69,6 @@
 - name: drush @hostmaster hosting-tasks --debug
   sudo: True
   sudo_user: "{{ aegir_user }}"
+
 #  register: valkyrie_modules_enabled
   shell: drush @hostmaster hosting-tasks --debug
