@@ -8,4 +8,5 @@
   roles:
     - geerlingguy.mysql
     - getvalkyrie.drush
-    - ansible-role-aegir
+    - getvalkyrie.aegir
+    - ansible-role-aegir3drulenium
