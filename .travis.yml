@@ -6,6 +6,8 @@ env:
   - ANSIBLE_VERSION=1.6
   - ANSIBLE_VERSION=1.7
   - ANSIBLE_VERSION=1.8
+#  - ANSIBLE_VERSION=1.9 -- why is this broken? Vagrant on Valkyrie wants Ansible 1.9
+  - ANSIBLE_VERSION=2.0
   - ANSIBLE_VERSION=2.0.0.1
 
 before_install:
