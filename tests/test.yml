@@ -11,10 +11,10 @@
     - aegir_makefile: aegir.make
     - aegir_makefile_contents: "{{ lookup('file', 'aegir.make') }}"
   roles:
-    - geerlingguy.java
-    - getvalkyrie.selenium
     - geerlingguy.mysql
     - getvalkyrie.drush
     - getvalkyrie.aegir
+    - geerlingguy.java
+    - getvalkyrie.selenium
     - getvalkyrie.drulenium
     - ansible-role-aegir3drulenium
