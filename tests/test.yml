@@ -7,10 +7,10 @@
     - mysql_innodb_log_file_size: "5M"
     - aegir_user: aegir
   roles:
-  #  - geerlingguy.java
-  #  - getvalkyrie.selenium
-  #  - geerlingguy.mysql
-  #  - getvalkyrie.drush
-  #  - getvalkyrie.aegir
-  #  - getvalkyrie.drulenium
+    - geerlingguy.java
+    - getvalkyrie.selenium
+    - geerlingguy.mysql
+    - getvalkyrie.drush
+    - getvalkyrie.aegir
+    - getvalkyrie.drulenium
     - ansible-role-aegir3drulenium
