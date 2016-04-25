@@ -1,3 +1,5 @@
 ---
 # defaults file for ansible-role-aegir3drulenium
 aegir_user: aegir
+aegir_makefile: aegir.make
+aegir_makefile_contents: "{{ lookup('file', 'aegir_makefile') }}"
