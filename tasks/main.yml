@@ -12,7 +12,7 @@
 #  register: valkyrie_modules_enabled
   shell: drush @hostmaster en diff number libraries taxonomy -y
 
-- name: Move Selenium
+- name: Get Selenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
   shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
@@ -21,12 +21,14 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   shell: unzip -d /var/aegir/hostmaster-7.x-3.x/sites/all/libraries /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+  ignore_errors: yes
 
 - name: Move Selenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
   shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  ignore_errors: yes
 
 - name: Switch to aegir and download Hosting Drulenium
   sudo: True
