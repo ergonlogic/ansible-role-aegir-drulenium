@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
     path: "tests/setup.sh",
     keep_color: true
   config.vm.provision "shell",
-    inline: "PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ansible-playbook /vagrant/tests/test.yml -i /vagrant/tests/inventory --connection=local --sudo",
+    inline: "PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true sudo ansible-playbook /vagrant/tests/test.yml -i /vagrant/tests/inventory --connection=local --sudo",
     keep_color: true
 
 end
