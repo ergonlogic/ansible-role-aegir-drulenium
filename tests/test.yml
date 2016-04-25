@@ -9,7 +9,7 @@
 #    - aegir_makefile: aegir.make
 #    - aegir_makefile_contents: "{{ lookup('file', './files/aegir.make') }}"
     - aegir_makefile: aegir.make
-    - aegir_makefile_contents: "{{ lookup('file', 'aegir_makefile') }}"
+    - aegir_makefile_contents: "{{ lookup('file', 'aegir.make') }}"
   roles:
     - geerlingguy.java
     - getvalkyrie.selenium
