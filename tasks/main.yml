@@ -1,21 +1,31 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
-#- name: Switch to aegir and download Hosting Drulenium
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster dl diff libraries -y
+- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  register: drush_dl_drulenium_dependencies
+  shell: drush @hostmaster dl diff libraries -y
 
-#- name: Enable Diff Number Libraries via Drush
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster en diff number libraries taxonomy -y
+- debug:
+    var: drush_dl_drulenium_dependencies
 
-#- name: Get PHP Web Driver
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+- name: Enable Diff Number Libraries via Drush
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  register: drush_dl_drulenium_dependencies_enabled
+  shell: drush @hostmaster en diff number libraries taxonomy -y
+
+- debug:
+    var: drush_dl_drulenium_dependencies_enabled
+
+- name: Get PHP Web Driver
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  register: drush_wget_php_web_driver
+  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+
+- debug:
+    var: drush_wget_php_web_driver
 
 #- name: Unzip PHP Web Driver
 #  sudo: True
