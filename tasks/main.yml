@@ -5,6 +5,7 @@
   sudo_user: "{{ aegir_user }}"
   shell: drush @hostmaster dl diff libraries -y
   register: drush_dl_drulenium_dependencies
+  changed_when: False
 
 - debug:
     var: drush_dl_drulenium_dependencies
@@ -16,6 +17,7 @@
   sudo_user: "{{ aegir_user }}"
   shell: drush @hostmaster en diff number libraries taxonomy -y
   register: drush_dl_drulenium_dependencies_enabled
+  changed_when: False
 
 - debug:
     var: drush_dl_drulenium_dependencies_enabled
@@ -30,10 +32,11 @@
 #  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
 #  register: drush_wget_php_web_driver
 
-- debug:
-    var: drush_wget_php_web_driver
+#- debug:
+#    var: drush_wget_php_web_driver
 
 - unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries copy=no
+  changed_when: False
 
 #- name: Unzip PHP Web Driver
 #  sudo: True
@@ -57,6 +60,9 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   command: creates="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver" mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+#  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  changed_when: False
+
 #  when: foo_stat.stat.exists
 
   #when: check_web_driver.rc != 1
@@ -69,39 +75,47 @@
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
-#- name: Switch to aegir and download Hosting Drulenium via become_user
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: Switch to aegir and download Hosting Drulenium via become_user
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+  shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+  changed_when: False
 
-#- name: Switch to aegir and enable Drulenium
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: Switch to aegir and enable Drulenium
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster en drulenium -y
+  shell: drush @hostmaster en drulenium -y
+  changed_when: False
 
-#- name: Switch to aegir and enable Hosting Drulenium
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: Switch to aegir and enable Hosting Drulenium
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster en hosting_drulenium -y
+  shell: drush @hostmaster en hosting_drulenium -y
+  changed_when: False
 
-#- name: clear cache - drush cc drush
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: clear cache - drush cc drush
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  shell: drush cc drush
+  shell: drush cc drush
+  changed_when: False
 
-#- name: clear cache - drush cc all
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+## TODO add handlers
+
+- name: clear cache - drush cc all
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  shell: drush cc all
+  shell: drush cc all
+  changed_when: False
 
-#- name: drush @hostmaster hosting-tasks --debug
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: drush @hostmaster hosting-tasks --debug
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  changed_when: False
 
 #  register: valkyrie_modules_enabled
 #  shell: drush @hostmaster hosting-tasks --debug
