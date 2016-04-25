@@ -15,6 +15,6 @@
     - getvalkyrie.drush
     - getvalkyrie.aegir
     - geerlingguy.java
-#    - getvalkyrie.selenium
+    - getvalkyrie.selenium
 #    - getvalkyrie.drulenium
     - ansible-role-aegir3drulenium
