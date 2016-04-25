@@ -8,13 +8,8 @@
 #sudo rm -rf /root/.my.cnf
 
 curl https://raw.githubusercontent.com/ErgonLogicEnterprises/ansible-bootstrap/master/install-ansible.sh | /bin/sh
-ansible-galaxy install http://github.com/geerlingguy/ansible-role-mysql,,geerlingguy.mysql
-ansible-galaxy install http://github.com/geerlingguy/ansible-role-java,,geerlingguy.java
-ansible-galaxy install http://github.com/ErgonLogicEnterprises/ansible-role-aegir.git,,getvalkyrie.aegir
-ansible-galaxy install http://github.com/ErgonLogicEnterprises/ansible-role-drulenium.git,,getvalkyrie.drulenium
-ansible-galaxy install http://github.com/ErgonLogicEnterprises/ansible-role-selenium.git,,getvalkyrie.selenium
-ansible-galaxy install http://github.com/ErgonLogicEnterprises/ansible-role-drush.git,,getvalkyrie.drush
-target=/etc/ansible/roles/ansible-role-aegir
+sudo ansible-galaxy install -r /vagrant/tests/requirements.yml
+target=/etc/ansible/roles/ansible-role-aegir3drulenium
 if [ ! -e $target ]; then
   mkdir -p /etc/ansible/roles
   ln -s /vagrant/ $target
