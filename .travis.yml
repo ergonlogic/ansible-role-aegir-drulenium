@@ -58,14 +58,14 @@ install:
 
 script:
   # Check the role/playbook's syntax.
-  - "sudo ansible-playbook -i tests/inventory tests/test.yml --syntax-check --sudo"
+  - "ansible-playbook -i tests/inventory tests/test.yml --syntax-check --sudo"
 
   # Run the role/playbook with ansible-playbook.
-  - "sudo ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
 
   # Run the role/playbook again, checking to make sure it's idempotent.
   - >
-    sudo ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+    ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
