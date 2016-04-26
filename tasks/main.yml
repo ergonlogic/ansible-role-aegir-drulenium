@@ -90,24 +90,40 @@
 ### Hosting Drulenium
 ##################
 
-- name: Drush | Ensure Drush Download of Hosting Drulenium
-  sudo: True
+- name: GIT | Ensure GIT CLONE of Hosting Drulenium
+  git:
+    repo: "{{ hosting_drulenium_repo }}"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
+#    depth: 1 # speeds things up
+    version: "{{ hosting_drulenium_version }}"
+    update: "{{ hosting_drulenium_update }}"
+  register: drush_git_hosting_drulenium
+  sudo: yes
   sudo_user: "{{ aegir_user }}"
-  register: drush_dl_hosting_drulenium
-  command: >
-    drush @hostmaster dl {{ hosting_drulenium_version }} -y
+  tags: [drush, download, hosting_drulenium]
+
+- debug:
+    var: drush_git_hosting_drulenium
+    tags: [drush, download, debug, hosting_drulenium]
+
+#- name: Drush | Ensure Drush Download of Hosting Drulenium
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  register: drush_dl_hosting_drulenium
+#  command: >
+#    drush @hostmaster dl {{ hosting_drulenium_version }} -y
 # drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
-  args:
-    creates: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
+#  args:
+#    creates: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
 #$  changed_when: "'Project drulenium (7.x-1.0-beta22) downloaded' not in drush_dl_hosting_drulenium.stderr"
 #  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it? (y/n): y' in drush_dl_hosting_drulenium.stdout"
 #  failed_when: "'already installed' not in drush_dl_hosting_drulenium.stdout and 'install ok' not in drush_dl_hosting_drulenium.stdout and drush_dl_hosting_drulenium.stderr"
 #  changed_when: False
-  tags: [drush, download, hosting_drulenium]
+#  tags: [drush, download, hosting_drulenium]
 
-- debug:
-    var: drush_dl_hosting_drulenium
-    tags: [drush, download, debug, hosting_drulenium]
+#- debug:
+#    var: drush_dl_hosting_drulenium
+#    tags: [drush, download, debug, hosting_drulenium]
 
 
 
