@@ -79,6 +79,7 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   register: valkyrie_modules_enabled
+#  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
   shell: drush @hostmaster dl drulenium-1.0-beta22 -y
   changed_when: False
 
@@ -88,7 +89,6 @@
 - name: Drush | Ensure Drush Download Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
   command: >
     drush @hostmaster dl {{ hosting_drulenium_version }} -y
   args:
@@ -106,9 +106,20 @@
 - name: Drush | Enable Drulenium in Hostmaster
   sudo: True
   sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-  shell: drush @hostmaster en drulenium -y
-  changed_when: False
+  register: drulenium_module_enabled
+  command: drush @hostmaster en drulenium -y
+  changed_when: "'drulenium is already enabled' not in drulenium_module_enabled.stderr"
+#  failed_when: "'already installed' not in drulenium_module_enabled.stdout and 'install ok' not in drulenium_module_enabled.stdout and drulenium_module_enabled.stderr"
+#  changed_when: False
+  tags:
+    - download
+    - drulenium
+
+- debug:
+    var: drulenium_module_enabled
+  tags:
+    - download
+    - drulenium
 
 - name: Drush | Enable Hosting Drulenium
   sudo: True
