@@ -75,19 +75,18 @@
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
-- name: Drush | Drush Download Hosting Drulenium
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
+#- name: Drush | Drush Download Hosting Drulenium
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-  command: >
-    drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
-  register: drush_dl_hosting_drulenium
-  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it' in drush_dl_hosting_drulenium.stdout"
+#  command: >
+#    drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+#  register: drush_dl_hosting_drulenium
+#  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it? (y/n): y' in drush_dl_hosting_drulenium.stdout"
 #  failed_when: "'already installed' not in drush_dl_hosting_drulenium.stdout and 'install ok' not in drush_dl_hosting_drulenium.stdout and drush_dl_hosting_drulenium.stderr"
 
 - debug:
     var: drush_dl_drulenium_dependencies_enabled
-
 
 - name: Switch to aegir and enable Drulenium
   sudo: True
