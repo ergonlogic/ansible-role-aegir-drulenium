@@ -75,14 +75,33 @@
 
   #when: check_web_driver.rc != 1
 
-- name: Drush | Drush Download Hosting Drulenium
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  register: valkyrie_modules_enabled
+#- name: Drush | Drush Download Drulenium
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  register: valkyrie_modules_enabled
 #  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
-  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
-  changed_when: False
+#  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
+#  changed_when: False
 
+##################
+### Drulenium
+##################
+
+- name: GIT | Ensure GIT CLONE of Drulenium
+  git:
+    repo: "{{ drulenium_repo }}"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/drulenium"
+#    depth: 1 # speeds things up
+    version: "{{ drulenium_repo_version }}"
+    update: "{{ drulenium_update }}"
+#  register: git_drulenium
+  sudo: yes
+  sudo_user: "{{ aegir_user }}"
+  tags: [git, download, drulenium]
+
+- debug:
+    var: git_drulenium
+    tags: [git, download, debug, drulenium]
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
@@ -95,12 +114,12 @@
     repo: "{{ hosting_drulenium_repo }}"
     dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
 #    depth: 1 # speeds things up
-    version: "{{ hosting_drulenium_version }}"
+    version: "{{ hosting_drulenium_repo_version }}"
     update: "{{ hosting_drulenium_update }}"
-  register: drush_git_hosting_drulenium
+#  register: git_hosting_drulenium
   sudo: yes
   sudo_user: "{{ aegir_user }}"
-  tags: [drush, download, hosting_drulenium]
+  tags: [git, download, hosting_drulenium]
 
 - debug:
     var: drush_git_hosting_drulenium
@@ -142,29 +161,36 @@
     tags: [enable, drulenium, drupal, aegir, hostmaster]
 
 
-
 - name: Drush | Enable Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
+  register: drulenium_hosting_module_enabled
   shell: drush @hostmaster en hosting_drulenium -y
   changed_when: False
+  tags: [drush, enable, drulenium, hosting_drulenium]
 
-- name: clear cache - drush cc drush
+- debug:
+    var: drulenium_hosting_module_enabled
+    tags: [enable, drulenium, drupal, aegir, hostmaster]
+
+- name: Drush | clear cache - drush cc drush
   sudo: True
   sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
   shell: drush cc drush
   changed_when: False
+  tags: [drush]
 
 ## TODO add handlers
 
-- name: clear cache - drush cc all
+- name: Drush | clear cache - drush cc all
   sudo: True
   sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
   shell: drush cc all
   changed_when: False
+  tags: [drush]
+
 
 #- name: drush @hostmaster hosting-tasks --debug
 #  sudo: True

@@ -3,7 +3,11 @@
 aegir_user: aegir
 aegir_platform_version: 7.x-3.x
 aegir_root: /var/aegir
-hosting_drulenium_version: hosting_drulenium-3.0-alpha2
+hosting_drulenium_drush_version: hosting_drulenium-3.0-alpha2
 hosting_drulenium_repo: https://git.drupal.org/project/hosting_drulenium.git
-hosting_drulenium_version: 7.x-3.x
-hosting_drulenium_update: True
+hosting_drulenium_repo_version: 7.x-3.x
+hosting_drulenium_update: no
+drulenium_drush_version: drulenium-1.0-beta22
+drulenium_repo: https://git.drupal.org/project/drulenium.git
+drulenium_repo_version: 7.x-1.x
+drulenium_update: no
