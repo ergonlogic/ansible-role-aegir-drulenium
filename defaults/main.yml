@@ -2,3 +2,5 @@
 # defaults file for ansible-role-aegir3drulenium
 aegir_user: aegir
 aegir_platform_version: 7.x-3.x
+aegir_root: /var/aegir
+hosting_drulenium_version: hosting_drulenium-3.0-alpha2
