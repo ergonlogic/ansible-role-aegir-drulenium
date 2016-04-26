@@ -28,10 +28,16 @@
 - name: Get PHP Web Driver
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/master.zip
   register: drush_wget_php_web_driver
   changed_when: False
 
+#- name: Get PHP Web Driver
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+#  register: drush_wget_php_web_driver
+#  changed_when: False
 
 #- debug:
 #    var: drush_wget_php_web_driver
@@ -40,28 +46,28 @@
 #- unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries copy=no
 #  changed_when: False
 
-#- name: Unzip PHP Web Driver
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  shell: unzip -d /var/aegir/hostmaster-7.x-3.x/sites/all/libraries /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
-#  ignore_errors: yes
-
-- name: Check PHP Web Driver
-  stat: path=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
-  register: check_web_driver
-
-- name: Move PHP Web Driver
+- name: Unzip PHP Web Driver
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  register: move_php_web_driver
-  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  shell: unzip -d /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries
   ignore_errors: yes
+
+- name: Check PHP Web Driver
+  stat: path=/var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver
+  register: check_web_driver
+
+#- name: Move PHP Web Driver
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  register: move_php_web_driver
+#  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+#  ignore_errors: yes
 
 
 - name: Move php-webdriver-master to selenium_webdriver
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver creates="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master"
+  command: mv /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver creates="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master"
 #  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
   changed_when: False
 
