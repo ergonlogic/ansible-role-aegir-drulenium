@@ -11,7 +11,6 @@
     var: drush_dl_drulenium_dependencies
 
 
-
 - name: Enable Diff Number Libraries via Drush
   sudo: True
   sudo_user: "{{ aegir_user }}"
@@ -26,17 +25,20 @@
 #  stat: path=/etc/shorewall/rules
 #  register: shorewall_rules
 
-#- name: Get PHP Web Driver
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
-#  register: drush_wget_php_web_driver
+- name: Get PHP Web Driver
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip
+  register: drush_wget_php_web_driver
+  changed_when: False
+
 
 #- debug:
 #    var: drush_wget_php_web_driver
 
-- unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries copy=no
-  changed_when: False
+# unarchive doesnt work on Ansible 1.9
+#- unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries copy=no
+#  changed_when: False
 
 #- name: Unzip PHP Web Driver
 #  sudo: True
@@ -48,12 +50,12 @@
   stat: path=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
   register: check_web_driver
 
-#- name: Move PHP Web Driver
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  register: move_php_web_driver
-#  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
-#  ignore_errors: yes
+- name: Move PHP Web Driver
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  register: move_php_web_driver
+  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  ignore_errors: yes
 
 
 - name: Move php-webdriver-master to selenium_webdriver
@@ -67,23 +69,27 @@
 
   #when: check_web_driver.rc != 1
 
-#- name: Switch to aegir and download Hosting Drulenium
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
+- name: Switch to aegir and download Hosting Drulenium
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  register: valkyrie_modules_enabled
+  shell: drush @hostmaster dl drulenium-1.0-beta22 -y
+  changed_when: False
+
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
-#- name: Drush | Drush Download Hosting Drulenium
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
+- name: Drush | Drush Download Hosting Drulenium
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-#  command: >
-#    drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
-#  register: drush_dl_hosting_drulenium
+  command: >
+    drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+  register: drush_dl_hosting_drulenium
 #  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it? (y/n): y' in drush_dl_hosting_drulenium.stdout"
 #  failed_when: "'already installed' not in drush_dl_hosting_drulenium.stdout and 'install ok' not in drush_dl_hosting_drulenium.stdout and drush_dl_hosting_drulenium.stderr"
+  changed_when: False
+
 
 - debug:
     var: drush_dl_drulenium_dependencies_enabled
