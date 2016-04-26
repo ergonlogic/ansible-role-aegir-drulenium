@@ -116,7 +116,7 @@
 #    depth: 1 # speeds things up
     version: "{{ hosting_drulenium_repo_version }}"
     update: "{{ hosting_drulenium_update }}"
-#  register: git_hosting_drulenium
+  register: git_hosting_drulenium
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   tags: [git, download, hosting_drulenium]
@@ -149,8 +149,8 @@
 - name: Drush | Enable Drulenium in Hostmaster
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  register: drulenium_module_enabled
   command: drush @hostmaster en drulenium -y
+  register: drulenium_module_enabled
   changed_when: "'drulenium is already enabled' not in drulenium_module_enabled.stderr"
 #  failed_when: "'already installed' not in drulenium_module_enabled.stdout and 'install ok' not in drulenium_module_enabled.stdout and drulenium_module_enabled.stderr"
 #  changed_when: False
@@ -164,8 +164,8 @@
 - name: Drush | Enable Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  register: drulenium_hosting_module_enabled
   shell: drush @hostmaster en hosting_drulenium -y
+  register: drulenium_hosting_module_enabled
   changed_when: False
   tags: [drush, enable, drulenium, hosting_drulenium]
 
