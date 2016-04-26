@@ -59,7 +59,7 @@
 - name: Move php-webdriver-master to selenium_webdriver
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  command: creates="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver" mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
+  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver creates="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master"
 #  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
   changed_when: False
 
@@ -75,12 +75,19 @@
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
-- name: Switch to aegir and download Hosting Drulenium via become_user
+- name: Drush | Drush Download Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-  shell: drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
-  changed_when: False
+  command: >
+    drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
+  register: drush_dl_hosting_drulenium
+  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it' in drush_dl_hosting_drulenium.stdout"
+#  failed_when: "'already installed' not in drush_dl_hosting_drulenium.stdout and 'install ok' not in drush_dl_hosting_drulenium.stdout and drush_dl_hosting_drulenium.stderr"
+
+- debug:
+    var: drush_dl_drulenium_dependencies_enabled
+
 
 - name: Switch to aegir and enable Drulenium
   sudo: True
@@ -112,10 +119,10 @@
   shell: drush cc all
   changed_when: False
 
-- name: drush @hostmaster hosting-tasks --debug
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  changed_when: False
+#- name: drush @hostmaster hosting-tasks --debug
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  changed_when: False
 
 #  register: valkyrie_modules_enabled
 #  shell: drush @hostmaster hosting-tasks --debug
