@@ -69,7 +69,7 @@
   sudo_user: "{{ aegir_user }}"
   command: creates="{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master" mv {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver
 #  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
-  changed_when: False
+#  changed_when: False
 
 #  when: foo_stat.stat.exists
 
@@ -86,22 +86,30 @@
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
-- name: Drush | Ensure Drush Download Hosting Drulenium
+##################
+### Hosting Drulenium
+##################
+
+- name: Drush | Ensure Drush Download of Hosting Drulenium
   sudo: True
   sudo_user: "{{ aegir_user }}"
+  register: drush_dl_hosting_drulenium
   command: >
     drush @hostmaster dl {{ hosting_drulenium_version }} -y
+# drush @hostmaster dl hosting_drulenium-3.0-alpha2 -y
   args:
     creates: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
-  register: drush_dl_hosting_drulenium
+#$  changed_when: "'Project drulenium (7.x-1.0-beta22) downloaded' not in drush_dl_hosting_drulenium.stderr"
 #  changed_when: "'hosting_drulenium already exists. Do you want to overwrite it? (y/n): y' in drush_dl_hosting_drulenium.stdout"
 #  failed_when: "'already installed' not in drush_dl_hosting_drulenium.stdout and 'install ok' not in drush_dl_hosting_drulenium.stdout and drush_dl_hosting_drulenium.stderr"
-  changed_when: False
-  tags: download, drulenium
-
+#  changed_when: False
+  tags: [drush, download, hosting_drulenium]
 
 - debug:
-    var: drush_dl_drulenium_dependencies_enabled
+    var: drush_dl_hosting_drulenium
+    tags: [drush, download, debug, hosting_drulenium]
+
+
 
 - name: Drush | Enable Drulenium in Hostmaster
   sudo: True
@@ -111,15 +119,13 @@
   changed_when: "'drulenium is already enabled' not in drulenium_module_enabled.stderr"
 #  failed_when: "'already installed' not in drulenium_module_enabled.stdout and 'install ok' not in drulenium_module_enabled.stdout and drulenium_module_enabled.stderr"
 #  changed_when: False
-  tags:
-    - download
-    - drulenium
+  tags: [enable, drulenium, drupal, aegir, hostmaster]
 
 - debug:
     var: drulenium_module_enabled
-  tags:
-    - download
-    - drulenium
+    tags: [enable, drulenium, drupal, aegir, hostmaster]
+
+
 
 - name: Drush | Enable Hosting Drulenium
   sudo: True
