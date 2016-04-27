@@ -1,11 +1,25 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
+- name: Drush | Drush Hostmaster Project list
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  shell: drush @hostmaster pml
+  register: drush_pml
+  changed_when: False
+  always_run: yes
+
+- debug:
+    var: drush_pml
+
+
 - name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
   sudo: True
   sudo_user: "{{ aegir_user }}"
   shell: drush @hostmaster dl diff libraries -y
   register: drush_dl_drulenium_dependencies
   changed_when: False
+  notify:
+    - Clear Drush cache
 
 - debug:
     var: drush_dl_drulenium_dependencies
@@ -15,7 +29,7 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   shell: drush @hostmaster en diff number libraries taxonomy -y
-  register: drush_dl_drulenium_dependencies_enabled
+  register: drush_en_drulenium_dependencies_enabled
   changed_when: False
 
 - debug:
@@ -94,7 +108,7 @@
 #    depth: 1 # speeds things up
     version: "{{ drulenium_repo_version }}"
     update: "{{ drulenium_update }}"
-#  register: git_drulenium
+  register: git_drulenium
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   tags: [git, download, drulenium]
@@ -122,7 +136,7 @@
   tags: [git, download, hosting_drulenium]
 
 - debug:
-    var: drush_git_hosting_drulenium
+    var: git_hosting_drulenium
     tags: [drush, download, debug, hosting_drulenium]
 
 #- name: Drush | Ensure Drush Download of Hosting Drulenium
