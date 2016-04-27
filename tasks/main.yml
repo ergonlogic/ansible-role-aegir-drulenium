@@ -1,5 +1,27 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
+## this is not useful with git downloaded drupal projects
+
+
+- name: GIT | Ensure GIT CLONE of Drupal Projects
+  git:
+    repo: "https://git.drupal.org/project/{{ item.key }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
+#    depth: 1 # speeds things up
+    version: "{{ item.value.git_repo_version }}"
+    update: "{{ item.value.git_repo_update }}"
+  register: git_repo
+  with_dict: "{{ git_repos }}"
+  sudo: yes
+  sudo_user: "{{ aegir_user }}"
+  tags: [git, download]
+
+- debug:
+    var: git_repos
+    tags: [git, download, debug, drulenium]
+
+
+## kind of useless when everything downloaded via git
 - name: Drush | Drush Hostmaster Project list
   sudo: True
   sudo_user: "{{ aegir_user }}"
@@ -12,17 +34,17 @@
     var: drush_pml
 
 
-- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  shell: drush @hostmaster dl diff libraries -y
-  register: drush_dl_drulenium_dependencies
-  changed_when: False
-  notify:
-    - Clear Drush cache
+#- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  shell: drush @hostmaster dl diff libraries -y
+#  register: drush_dl_drulenium_dependencies
+#  changed_when: False
+#  notify:
+#    - Clear Drush cache
 
-- debug:
-    var: drush_dl_drulenium_dependencies
+#- debug:
+#    var: drush_dl_drulenium_dependencies
 
 
 - name: Enable Diff Number Libraries via Drush
@@ -31,20 +53,40 @@
   shell: drush @hostmaster en diff number libraries taxonomy -y
   register: drush_en_drulenium_dependencies_enabled
   changed_when: False
+  notify:
+    - Clear Drush cache
 
 - debug:
-    var: drush_dl_drulenium_dependencies_enabled
+    var: drush_en_drulenium_dependencies_enabled
+
+
 
 #- name: Check
 #  stat: path=/etc/shorewall/rules
 #  register: shorewall_rules
 
-- name: Get PHP Web Driver
-  sudo: True
-  sudo_user: aegir
-  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/master.zip
-  register: drush_wget_php_web_driver
-  changed_when: False
+- name: GIT | Ensure GIT CLONE of PHP Selenium Web Driver
+  git:
+    repo: "{{ php_webdriver_repo }}"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/{{ php_webdriver_dest }}"
+    version: "{{ php_webdriver_version }}"
+    update: "{{ php_webdriver_update }}"
+  register: php_webdriver
+  sudo: yes
+  sudo_user: "{{ aegir_user }}"
+  tags: [git, download, selenium, selenium_webdriver]
+
+- debug:
+    var: git_repos
+    tags: [git, download, debug, drulenium]
+
+
+#- name: Get PHP Web Driver
+#  sudo: True
+#  sudo_user: aegir
+#  shell: wget https://github.com/facebook/php-webdriver/archive/master.zip -O /var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/master.zip
+#  register: drush_wget_php_web_driver
+#  changed_when: False
 
 #- name: Get PHP Web Driver
 #  sudo: True
@@ -60,11 +102,11 @@
 #- unarchive: src=https://github.com/facebook/php-webdriver/archive/master.zip dest=/var/aegir/hostmaster-7.x-3.x/sites/all/libraries copy=no
 #  changed_when: False
 
-- name: Unzip PHP Web Driver
-  sudo_user: aegir
-  shell: unzip -u /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip -d /var/aegir/hostmaster-7.x-3.x/sites/all/libraries
+#- name: Unzip PHP Web Driver
+#  sudo_user: aegir
+#  shell: unzip -u /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/master.zip -d /var/aegir/hostmaster-7.x-3.x/sites/all/libraries
 #  ignore_errors: yes
-  changed_when: False
+#  changed_when: False
 
 #- name: Check PHP Web Driver
 #  stat: path=/var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver
@@ -78,10 +120,10 @@
 #  ignore_errors: yes
 
 
-- name: Ensure php-webdriver-master Moved to selenium_webdriver
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  command: creates="{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master" mv {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver
+#- name: Ensure php-webdriver-master Moved to selenium_webdriver
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  command: creates="{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver" removes="/var/aegir/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master" mv {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/php-webdriver-master {{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/selenium_webdriver
 #  command: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master/ /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
 #  changed_when: False
 
@@ -101,21 +143,21 @@
 ### Drulenium
 ##################
 
-- name: GIT | Ensure GIT CLONE of Drulenium
-  git:
-    repo: "{{ drulenium_repo }}"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/drulenium"
+#- name: GIT | Ensure GIT CLONE of Drulenium
+#  git:
+#    repo: "{{ drulenium_repo }}"
+#    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/drulenium"
 #    depth: 1 # speeds things up
-    version: "{{ drulenium_repo_version }}"
-    update: "{{ drulenium_update }}"
-  register: git_drulenium
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
-  tags: [git, download, drulenium]
+#    version: "{{ drulenium_repo_version }}"
+#    update: "{{ drulenium_update }}"
+#  register: git_drulenium
+#  sudo: yes
+#  sudo_user: "{{ aegir_user }}"
+#  tags: [git, download, drulenium]
 
-- debug:
-    var: git_drulenium
-    tags: [git, download, debug, drulenium]
+#- debug:
+#    var: git_drulenium
+#    tags: [git, download, debug, drulenium]
 
 ## vset Drulenium settings for Ubuntu 14 or via Feature?
 
@@ -123,21 +165,21 @@
 ### Hosting Drulenium
 ##################
 
-- name: GIT | Ensure GIT CLONE of Hosting Drulenium
-  git:
-    repo: "{{ hosting_drulenium_repo }}"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
+#- name: GIT | Ensure GIT CLONE of Hosting Drulenium
+#  git:
+#    repo: "{{ hosting_drulenium_repo }}"
+#    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/hosting_drulenium"
 #    depth: 1 # speeds things up
-    version: "{{ hosting_drulenium_repo_version }}"
-    update: "{{ hosting_drulenium_update }}"
-  register: git_hosting_drulenium
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
-  tags: [git, download, hosting_drulenium]
+#    version: "{{ hosting_drulenium_repo_version }}"
+#    update: "{{ hosting_drulenium_update }}"
+#  register: git_hosting_drulenium
+#  sudo: yes
+#  sudo_user: "{{ aegir_user }}"
+#  tags: [git, download, hosting_drulenium]
 
-- debug:
-    var: git_hosting_drulenium
-    tags: [drush, download, debug, hosting_drulenium]
+#- debug:
+#    var: git_hosting_drulenium
+#    tags: [drush, download, debug, hosting_drulenium]
 
 #- name: Drush | Ensure Drush Download of Hosting Drulenium
 #  sudo: True
@@ -157,8 +199,6 @@
 #- debug:
 #    var: drush_dl_hosting_drulenium
 #    tags: [drush, download, debug, hosting_drulenium]
-
-
 
 - name: Drush | Enable Drulenium in Hostmaster
   sudo: True
@@ -180,30 +220,29 @@
   sudo_user: "{{ aegir_user }}"
   shell: drush @hostmaster en hosting_drulenium -y
   register: drulenium_hosting_module_enabled
-  changed_when: False
+  changed_when: "'hosting_drulenium is already enabled' not in drulenium_hosting_module_enabled.stderr"
   tags: [drush, enable, drulenium, hosting_drulenium]
 
 - debug:
     var: drulenium_hosting_module_enabled
     tags: [enable, drulenium, drupal, aegir, hostmaster]
 
-- name: Drush | clear cache - drush cc drush
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-  shell: drush cc drush
-  changed_when: False
-  tags: [drush]
+#- name: Drush | clear cache all - drush cc all
+#  notify:
+#    - Clear Drush hostmaster ALL
+
+- meta: flush_handlers
+
 
 ## TODO add handlers
 
-- name: Drush | clear cache - drush cc all
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
+#- name: Drush | clear cache - drush cc all
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
 #  register: valkyrie_modules_enabled
-  shell: drush cc all
-  changed_when: False
-  tags: [drush]
+#  shell: drush cc all
+#  changed_when: False
+#  tags: [drush]
 
 
 #- name: drush @hostmaster hosting-tasks --debug

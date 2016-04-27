@@ -5,6 +5,11 @@
   sudo: yes
   sudo_user: "{{ aegir_user }}"
 
+- name: Clear Drush hostmaster ALL
+  command: drush @hostmaster cc all
+  sudo: yes
+  sudo_user: "{{ aegir_user }}"
+
 - name: Verify Aegir front-end
   shell: drush @hm cc drush && drush @hm hosting-task @hostmaster verify --force
   sudo: yes
