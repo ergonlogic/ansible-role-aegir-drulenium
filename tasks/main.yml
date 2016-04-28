@@ -20,7 +20,7 @@
     var: git_repos
     tags: [git, download, debug, drulenium]
 
-## kind of useless when everything downloaded via git
+
 - name: Check if Aegir Drulenium modules are enabled
   shell: "drush @hm pm-info --fields=status --format=list {{ item.project }} | egrep 'disabled|not installed'"
   sudo: True
@@ -40,7 +40,7 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   with_items: git_repos
-#  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
 #  notify: Verify Aegir front-end
 
 - debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
