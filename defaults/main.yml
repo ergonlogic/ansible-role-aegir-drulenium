@@ -16,19 +16,23 @@ php_webdriver_repo: https://github.com/facebook/php-webdriver.git
 php_webdriver_dest: selenium_webdriver
 php_webdriver_update: no
 git_repos:
-    hosting_drulenium:
-      name: Hosting Drulenium
-      git_repo_version: 7.x-3.0-beta1
-      git_repo_update: no
-    drulenium:
-      name: Drulenium
-      git_repo_version: 7.x-1.0-beta22
-      git_repo_update: no
-    diff:
-      name: Diff
-      git_repo_version: 7.x-3.2
-      git_repo_update: no
-    libraries:
-      name: Libraries
-      git_repo_version: 7.x-2.2
-      git_repo_update: no
+ -
+   project: hosting_drulenium
+   name: Hosting Drulenium
+   git_repo_version: 7.x-3.0-beta1
+   git_repo_update: no
+ -
+   project: drulenium
+   name: Drulenium
+   git_repo_version: 7.x-1.0-beta22
+   git_repo_update: no
+ -
+   project: diff
+   name: Diff
+   git_repo_version: 7.x-3.2
+   git_repo_update: no
+ -
+   project: libraries
+   name: Libraries
+   git_repo_version: 7.x-2.2
+   git_repo_update: no

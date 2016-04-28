@@ -5,13 +5,13 @@
 
 - name: GIT | Ensure GIT CLONE of Drupal Projects
   git:
-    repo: "https://git.drupal.org/project/{{ item.key }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
+    repo: "https://git.drupal.org/project/{{ item.project }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project }}"
 #    depth: 1 # speeds things up
-    version: "{{ item.value.git_repo_version }}"
-    update: "{{ item.value.git_repo_update }}"
+    version: "{{ item.git_repo_version }}"
+    update: "{{ item.git_repo_update }}"
   register: git_repo
-  with_dict: "{{ git_repos }}"
+  with_items: "{{ git_repos }}"
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   tags: [git, download]
@@ -22,16 +22,30 @@
 
 
 ## kind of useless when everything downloaded via git
-- name: Drush | Drush Hostmaster Project list
+- name: Check if Aegir Drulenium modules are enabled
+  shell: "drush @hm pm-info --fields=status --format=list {{ item.project }} | egrep 'disabled|not installed'"
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  shell: drush @hostmaster pml
-  register: drush_pml
+  register: aegir_drulenium_modules_enabled
+  with_items: git_repos
   changed_when: False
-  always_run: yes
+  failed_when: False
+  ignore_errors: yes
 
 - debug:
-    var: drush_pml
+    var: aegir_drulenium_modules_enabled
+    tags: [git, download, debug, drulenium]
+
+- name: Enable Aegir Drulenium modules
+  command: "drush @hm --yes en {{ item.1 }} --no-verify --strict=0"
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  with_indexed_items: git_repos
+  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+#  notify: Verify Aegir front-end
+
+
+
 
 #- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
 #  sudo: True
@@ -221,28 +235,22 @@
     var: drulenium_hosting_module_enabled
     tags: [enable, drulenium, drupal, aegir, hostmaster]
 
-#- name: Drush | clear cache all - drush cc all
-#  notify:
-#    - Clear Drush hostmaster ALL
 
-- meta: flush_handlers
+# - meta: flush_handlers
 
 
 ## TODO add handlers
 
-#- name: Drush | clear cache - drush cc all
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  register: valkyrie_modules_enabled
-#  shell: drush cc all
-#  changed_when: False
-#  tags: [drush]
+- name: Drush | clear cache - drush cc all
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  command: drush cc all
+  changed_when: False
+  tags: [drush]
 
 
-#- name: drush @hostmaster hosting-tasks --debug
-#  sudo: True
-#  sudo_user: "{{ aegir_user }}"
-#  changed_when: False
-
-#  register: valkyrie_modules_enabled
-#  shell: drush @hostmaster hosting-tasks --debug
+- name: drush @hostmaster hosting-tasks --debug
+  sudo: True
+  sudo_user: "{{ aegir_user }}"
+  changed_when: False
+  command: drush @hostmaster hosting-tasks --debug
