@@ -20,7 +20,6 @@
     var: git_repos
     tags: [git, download, debug, drulenium]
 
-
 ## kind of useless when everything downloaded via git
 - name: Check if Aegir Drulenium modules are enabled
   shell: "drush @hm pm-info --fields=status --format=list {{ item.project }} | egrep 'disabled|not installed'"
@@ -37,14 +36,19 @@
     tags: [git, download, debug, drulenium]
 
 - name: Enable Aegir Drulenium modules
-  command: "drush @hm --yes en {{ item.1 }} --no-verify --strict=0"
+  command: "drush @hm --yes en {{ item.project }} --no-verify --strict=0"
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  with_indexed_items: git_repos
-  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+  with_items: git_repos
+#  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
 #  notify: Verify Aegir front-end
 
+- debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
+  with_items: "{{aegir_drulenium_modules_enabled.results}}"
 
+- debug:
+    var: aegir_drulenium_modules_enabled
+    tags: [git, download, debug, drulenium]
 
 
 #- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
@@ -59,17 +63,17 @@
 #- debug:
 #    var: drush_dl_drulenium_dependencies
 
-- name: Enable Diff Number Libraries via Drush
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  shell: drush @hostmaster en diff number libraries taxonomy -y
-  register: drush_en_drulenium_dependencies_enabled
-  changed_when: False
-  notify:
-    - Clear Drush cache
+#- name: Enable Diff Number Libraries via Drush
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  shell: drush @hostmaster en diff number libraries taxonomy -y
+#  register: drush_en_drulenium_dependencies_enabled
+#  changed_when: False
+#  notify:
+#    - Clear Drush cache
 
-- debug:
-    var: drush_en_drulenium_dependencies_enabled
+#- debug:
+#    var: drush_en_drulenium_dependencies_enabled
 
 #- name: Check
 #  stat: path=/etc/shorewall/rules
@@ -208,32 +212,32 @@
 #    var: drush_dl_hosting_drulenium
 #    tags: [drush, download, debug, hosting_drulenium]
 
-- name: Drush | Enable Drulenium in Hostmaster
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  command: drush @hostmaster en drulenium -y
-  register: drulenium_module_enabled
-  changed_when: "'drulenium is already enabled' not in drulenium_module_enabled.stderr"
+#- name: Drush | Enable Drulenium in Hostmaster
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  command: drush @hostmaster en drulenium -y
+#  register: drulenium_module_enabled
+#  changed_when: "'drulenium is already enabled' not in drulenium_module_enabled.stderr"
 #  failed_when: "'already installed' not in drulenium_module_enabled.stdout and 'install ok' not in drulenium_module_enabled.stdout and drulenium_module_enabled.stderr"
 #  changed_when: False
-  tags: [enable, drulenium, drupal, aegir, hostmaster]
+#  tags: [enable, drulenium, drupal, aegir, hostmaster]
 
-- debug:
-    var: drulenium_module_enabled
-    tags: [enable, drulenium, drupal, aegir, hostmaster]
+#- debug:
+#    var: drulenium_module_enabled
+#    tags: [enable, drulenium, drupal, aegir, hostmaster]
 
 
-- name: Drush | Enable Hosting Drulenium
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  shell: drush @hostmaster en hosting_drulenium -y
-  register: drulenium_hosting_module_enabled
-  changed_when: "'hosting_drulenium is already enabled' not in drulenium_hosting_module_enabled.stderr"
-  tags: [drush, enable, drulenium, hosting_drulenium]
+#- name: Drush | Enable Hosting Drulenium
+#  sudo: True
+#  sudo_user: "{{ aegir_user }}"
+#  shell: drush @hostmaster en hosting_drulenium -y
+#  register: drulenium_hosting_module_enabled
+#  changed_when: "'hosting_drulenium is already enabled' not in drulenium_hosting_module_enabled.stderr"
+#  tags: [drush, enable, drulenium, hosting_drulenium]
 
-- debug:
-    var: drulenium_hosting_module_enabled
-    tags: [enable, drulenium, drupal, aegir, hostmaster]
+#- debug:
+#    var: drulenium_hosting_module_enabled
+#    tags: [enable, drulenium, drupal, aegir, hostmaster]
 
 
 # - meta: flush_handlers
