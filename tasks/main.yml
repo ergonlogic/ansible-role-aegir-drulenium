@@ -1,6 +1,25 @@
 ---
 # tasks file for ansible-role-aegir3drulenium
 
+- name: GIT | Ensure GIT CLONE of Drupal Projects
+  git:
+    repo: "https://git.drupal.org/project/{{ item.key }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
+#    depth: 1 # speeds things up
+    version: "{{ item.value.git_repo_version }}"
+    update: "{{ item.value.git_repo_update }}"
+  register: git_repo
+  with_dict: "{{ drulenium_module_git_repos }}"
+  sudo: yes
+  sudo_user: "{{ aegir_user }}"
+  when: drulenium_module_git_install
+  tags: [git, download]
+
+
+- debug:
+    var: drulenium_module_git_repos
+    tags: [git, download, debug, drulenium]
+
 - name: Check if Aegir Drulenium modules are enabled
   shell: "drush @hm pm-info --fields=status --format=list {{ item }} | egrep 'disabled|not installed'"
   sudo: True
@@ -31,23 +50,6 @@
     var: drulenium_modules_enabled
     tags: [git, download, debug, drulenium]
 
-
-- name: GIT | Ensure GIT CLONE of Drupal Projects
-  git:
-    repo: "https://git.drupal.org/project/{{ item.key }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
-#    depth: 1 # speeds things up
-    version: "{{ item.value.git_repo_version }}"
-    update: "{{ item.value.git_repo_update }}"
-  register: git_repo
-  with_dict: "{{ drulenium_module_git_repos }}"
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
-  tags: [git, download]
-
-- debug:
-    var: drulenium_module_git_repos
-    tags: [git, download, debug, drulenium]
 
 - name: GIT | Ensure GIT CLONE of PHP Selenium Web Driver
   git:

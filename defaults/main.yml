@@ -12,7 +12,7 @@ drulenium_modules:
   - hosting_drulenium
   - diff
   - libraries
-
+drulenium_module_git_install: true
 drulenium_module_git_repos:
     hosting_drulenium:
       name: Hosting Drulenium
