@@ -33,7 +33,6 @@
 - debug:
     var: drush_pml
 
-
 #- name: Drush Download Hosting Drulenium Dependencies Diff and Libraries
 #  sudo: True
 #  sudo_user: "{{ aegir_user }}"
@@ -46,7 +45,6 @@
 #- debug:
 #    var: drush_dl_drulenium_dependencies
 
-
 - name: Enable Diff Number Libraries via Drush
   sudo: True
   sudo_user: "{{ aegir_user }}"
@@ -58,8 +56,6 @@
 
 - debug:
     var: drush_en_drulenium_dependencies_enabled
-
-
 
 #- name: Check
 #  stat: path=/etc/shorewall/rules
@@ -79,7 +75,6 @@
 - debug:
     var: git_repos
     tags: [git, download, debug, drulenium]
-
 
 #- name: Get PHP Web Driver
 #  sudo: True
@@ -118,7 +113,6 @@
 #  register: move_php_web_driver
 #  shell: mv /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/php-webdriver-master /var/aegir/hostmaster-7.x-3.x/sites/all/libraries/selenium_webdriver
 #  ignore_errors: yes
-
 
 #- name: Ensure php-webdriver-master Moved to selenium_webdriver
 #  sudo: True
