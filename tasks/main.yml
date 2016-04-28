@@ -3,13 +3,13 @@
 
 - name: GIT | Ensure GIT CLONE of Drupal Projects
   git:
-    repo: "https://git.drupal.org/project/{{ item.project }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project }}"
+    repo: "https://git.drupal.org/project/{{ item.key }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
 #    depth: 1 # speeds things up
-    version: "{{ item.git_repo_version }}"
-    update: "{{ item.git_repo_update }}"
+    version: "{{ item.value.git_repo_version }}"
+    update: "{{ item.value.git_repo_update }}"
   register: git_repo
-  with_items: "{{ drulenium_module_git_repos }}"
+  with_dict: "{{ drulenium_module_git_repos }}"
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   tags: [git, download]
@@ -38,7 +38,7 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   with_items: drulenium_module_git_repos
-  when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+  when: "aegir_drulenium_modules_enabled.results[{{ item.results }}].rc == 0"
 #  notify: Verify Aegir front-end
 
 - debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"

@@ -3,36 +3,24 @@
 aegir_user: aegir
 aegir_platform_version: 7.x-3.x
 aegir_root: /var/aegir
-#hosting_drulenium_drush_version: hosting_drulenium-3.0-alpha2
-#hosting_drulenium_repo: https://git.drupal.org/project/hosting_drulenium.git
-#hosting_drulenium_repo_version: 7.x-3.0-beta1
-#hosting_drulenium_update: no
-#drulenium_drush_version: drulenium-1.0-beta22
-#drulenium_repo: https://git.drupal.org/project/drulenium.git
-#drulenium_repo_version: 7.x-1.0-beta22
-#drulenium_update: no
 php_webdriver_version: master
 php_webdriver_repo: https://github.com/facebook/php-webdriver.git
 php_webdriver_dest: selenium_webdriver
 php_webdriver_update: no
 drulenium_module_git_repos:
- -
-   project: hosting_drulenium
-   name: Hosting Drulenium
-   git_repo_version: 7.x-3.0-beta1
-   git_repo_update: no
- -
-   project: drulenium
-   name: Drulenium
-   git_repo_version: 7.x-1.0-beta22
-   git_repo_update: no
- -
-   project: diff
-   name: Diff
-   git_repo_version: 7.x-3.2
-   git_repo_update: no
- -
-   project: libraries
-   name: Libraries
-   git_repo_version: 7.x-2.2
-   git_repo_update: no
+    hosting_drulenium:
+      name: Hosting Drulenium
+      git_repo_version: 7.x-3.0-beta1
+      git_repo_update: no
+    drulenium:
+      name: Drulenium
+      git_repo_version: 7.x-1.0-beta22
+      git_repo_update: no
+    diff:
+      name: Diff
+      git_repo_version: 7.x-3.2
+      git_repo_update: no
+    libraries:
+      name: Libraries
+      git_repo_version: 7.x-2.2
+      git_repo_update: no
