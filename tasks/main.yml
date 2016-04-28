@@ -9,13 +9,13 @@
     version: "{{ item.git_repo_version }}"
     update: "{{ item.git_repo_update }}"
   register: git_repo
-  with_items: "{{ git_repos }}"
+  with_items: "{{ drulenium_module_git_repos }}"
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   tags: [git, download]
 
 - debug:
-    var: git_repos
+    var: drulenium_module_git_repos
     tags: [git, download, debug, drulenium]
 
 
@@ -24,7 +24,7 @@
   sudo: True
   sudo_user: "{{ aegir_user }}"
   register: aegir_drulenium_modules_enabled
-  with_items: git_repos
+  with_items: drulenium_module_git_repos
   changed_when: False
   failed_when: False
   ignore_errors: yes
@@ -37,7 +37,7 @@
   command: "drush @hm --yes en {{ item.project }} --no-verify --strict=0"
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  with_items: git_repos
+  with_items: drulenium_module_git_repos
   when: "aegir_drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
 #  notify: Verify Aegir front-end
 
@@ -62,7 +62,7 @@
   tags: [git, download, selenium, selenium_webdriver]
 
 - debug:
-    var: git_repos
+    var: drulenium_module_git_repos
     tags: [git, download, debug, drulenium]
 
 - name: Drush | clear cache - drush cc all
