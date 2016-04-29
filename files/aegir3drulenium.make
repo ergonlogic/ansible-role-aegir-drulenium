@@ -22,3 +22,9 @@ projects[libraries][type] = "module"
 projects[libraries][download][type] = "git"
 projects[libraries][download][url] = "http://github.com/projects/libraries.git"
 projects[libraries][download][branch] = "7.x-2.2"
+
+; Libraries
+libraries[php-webdriver][directory_name] = "selenium_webdriver"
+libraries[php-webdriver][download][type] = get
+libraries[php-webdriver][download][url] = https://github.com/facebook/php-webdriver/archive/master.zip
+libraries[php-webdriver][destination] = libraries
