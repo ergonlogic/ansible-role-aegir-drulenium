@@ -17,7 +17,6 @@
 
 - debug:
     var: drulenium_module_git_repos_registered
-    tags: [git, download, debug, drulenium]
 
 - name: Check if Aegir Drulenium modules are enabled
   shell: "drush @hm pm-info --fields=status --format=list {{ item.project_name }} | egrep 'disabled|not installed'"
@@ -31,7 +30,6 @@
 
 - debug:
     var: drulenium_modules_enabled
-    tags: [git, download, debug, drulenium_modules]
 
 - name: Enable Aegir Drulenium modules
   command: "drush @hm --yes en {{ item.1 }} --no-verify --strict=0"
@@ -43,7 +41,6 @@
 
 - debug:
     var: drulenium_modules_enabled
-    tags: [git, download, debug, drulenium]
 
 - name: GIT | Ensure GIT CLONE of PHP Selenium Web Driver
   git:
@@ -58,7 +55,6 @@
 
 - debug:
     var: drulenium_module_git_repos
-    tags: [git, download, debug, drulenium]
 
 - name: Drush | clear cache - drush cc all
   sudo: True
