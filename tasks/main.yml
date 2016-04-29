@@ -43,12 +43,46 @@
     version: "{{ php_webdriver_version }}"
     update: "{{ php_webdriver_update }}"
   register: php_webdriver
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
+  become: yes
+  become_user: "{{ aegir_user }}"
   tags: [git, download, selenium, selenium_webdriver]
 
-- name: Vset Drulenium
-  shell: drush @hm vset drulenium_vr_config_image_server_opt local && drush @hm vset drulenium_vr_config_server_opt local &&  drush @hm vset drulenium_vr_release_imagemagick_path /usr/bin
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
-  notify: Verify Aegir front-end
+- name: Check Drulenium server setting.
+  shell: drush @hm vget drulenium_vr_config_server_opt --format=string
+  become: yes
+  become_user: "{{ aegir_user }}"
+  register: drulenium_vr_config_server_opt
+  changed_when: false
+
+- name: Set Drulenium server.
+  shell: drush @hm vset drulenium_vr_config_server_opt local
+  become: yes
+  become_user: "{{ aegir_user }}"
+  when: drulenium_vr_config_server_opt.stdout != 'local'
+
+- name: Check Drulenium server setting.
+  shell: drush @hm vget drulenium_vr_config_image_server_opt --format=string
+  become: yes
+  become_user: "{{ aegir_user }}"
+  register: drulenium_vr_config_image_server_opt
+  changed_when: false
+
+- name: Set Drulenium image server.
+  shell: drush @hm vset drulenium_vr_config_image_server_opt local
+  become: yes
+  become_user: "{{ aegir_user }}"
+  when: drulenium_vr_config_image_server_opt.stdout != 'local'
+
+- name: Check ImageMagick path.
+  shell: drush @hm vget drulenium_vr_release_imagemagick_path --format=string
+  become: yes
+  become_user: "{{ aegir_user }}"
+  register: drulenium_vr_release_imagemagick_path
+  changed_when: false
+
+- name: Set ImageMagick path.
+  shell: drush @hm vset drulenium_vr_release_imagemagick_path /usr/bin
+  become: yes
+  become_user: "{{ aegir_user }}"
+  when: drulenium_vr_release_imagemagick_path.stdout != '/usr/bin'
+
