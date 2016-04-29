@@ -48,4 +48,4 @@
   shell: drush @hm vset drulenium_vr_config_image_server_opt local && drush @hm vset drulenium_vr_config_server_opt local &&  drush @hm vset drulenium_vr_release_imagemagick_path /usr/bin
   sudo: yes
   sudo_user: "{{ aegir_user }}"
-  notify: Verify Aegir front-end  
+  notify: Verify Aegir front-end
