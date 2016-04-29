@@ -3,29 +3,28 @@
 
 - name: GIT | Ensure GIT CLONE of Drupal Projects
   git:
-    repo: "https://git.drupal.org/project/{{ item.key }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.key }}"
+    repo: "https://git.drupal.org/project/{{ item.project_name }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project_name }}"
 #    depth: 1 # speeds things up
-    version: "{{ item.value.git_repo_version }}"
-    update: "{{ item.value.git_repo_update }}"
-  register: git_repo
-  with_dict: "{{ drulenium_module_git_repos }}"
+    version: "{{ item.git_repo_version }}"
+    update: "{{ item.git_repo_update }}"
+  register: drulenium_module_git_repos_registered
+  with_items: "drulenium_module_git_repos"
   sudo: yes
   sudo_user: "{{ aegir_user }}"
   when: drulenium_module_git_install
   tags: [git, download]
 
-
 - debug:
-    var: drulenium_module_git_repos
+    var: drulenium_module_git_repos_registered
     tags: [git, download, debug, drulenium]
 
 - name: Check if Aegir Drulenium modules are enabled
-  shell: "drush @hm pm-info --fields=status --format=list {{ item }} | egrep 'disabled|not installed'"
+  shell: "drush @hm pm-info --fields=status --format=list {{ item.project_name }} | egrep 'disabled|not installed'"
   sudo: True
   sudo_user: "{{ aegir_user }}"
   register: drulenium_modules_enabled
-  with_items: drulenium_modules
+  with_items: drulenium_module_git_repos
   changed_when: False
   failed_when: False
   ignore_errors: yes
@@ -34,22 +33,18 @@
     var: drulenium_modules_enabled
     tags: [git, download, debug, drulenium_modules]
 
-
 - name: Enable Aegir Drulenium modules
   command: "drush @hm --yes en {{ item.1 }} --no-verify --strict=0"
   sudo: True
   sudo_user: "{{ aegir_user }}"
   with_indexed_items: drulenium_modules
   when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
-#  notify: Verify Aegir front-end
+  notify: Verify Aegir front-end
 
-- debug: msg="item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
-  with_items: "{{drulenium_modules_enabled.results}}"
 
 - debug:
     var: drulenium_modules_enabled
     tags: [git, download, debug, drulenium]
-
 
 - name: GIT | Ensure GIT CLONE of PHP Selenium Web Driver
   git:
