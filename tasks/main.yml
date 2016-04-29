@@ -29,10 +29,10 @@
     var: drulenium_modules_enabled
 
 - name: Enable Aegir Drulenium modules
-  command: "drush @hm --yes en {{ item.1 }} --no-verify --strict=0"
+  command: "drush @hm --yes en {{ item.1.project_name }} --no-verify --strict=0"
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  with_indexed_items: "{{ drulenium_modules }}"
+  with_indexed_items: "{{ drulenium_module_git_repos }}"
   when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
   notify: Verify Aegir front-end
 

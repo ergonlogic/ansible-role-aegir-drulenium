@@ -7,11 +7,6 @@ php_webdriver_version: master
 php_webdriver_repo: https://github.com/facebook/php-webdriver.git
 php_webdriver_dest: selenium_webdriver
 php_webdriver_update: no
-drulenium_modules:
-  - drulenium
-  - hosting_drulenium
-  - diff
-  - libraries
 drulenium_module_git_install: true
 drulenium_module_git_repos:
   - {project_name: "hosting_drulenium", name: "Hosting Drulenium", git_repo_version: "7.x-3.0-beta1", git_repo_update: "no"}
