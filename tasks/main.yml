@@ -41,7 +41,6 @@
   when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
   notify: Verify Aegir front-end
 
-
 - debug:
     var: drulenium_modules_enabled
     tags: [git, download, debug, drulenium]
