@@ -1,9 +1,9 @@
 Role Name
 =========
 
-[![Build Status](https://travis-ci.org/ErgonLogicEnterprises/ansible-role-aegir3drulenium.svg?branch=master)](https://travis-ci.org/ErgonLogicEnterprises/ansible-role-aegir3drulenium)
+[![Build Status](https://travis-ci.org/ergonlogic/ansible-role-aegir-drulenium.svg?branch=master)](https://travis-ci.org/ergonlogic/ansible-role-aegir-drulenium)
 
-Ansible role for install of Aegir Hosting Drulenium on Aegir Hosting System
+Ansible role install Drulenium on the Aegir Hosting System.
 
 Requirements
 ------------
