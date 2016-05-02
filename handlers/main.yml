@@ -1,16 +1,15 @@
 ---
-# handlers file for ansible-role-aegir3drulenium
-- name: Clear Drush cache
+- name: Clear global Drush cache
   command: drush @none cc drush
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
+  become: yes
+  become_user: "{{ aegir_user }}"
 
-- name: Clear Drush hostmaster ALL
+- name: Clear all hostmaster caches
   command: drush @hostmaster cc all
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
+  become: yes
+  become_user: "{{ aegir_user }}"
 
 - name: Verify Aegir front-end
   shell: drush @hm cc drush && drush @hm hosting-task @hostmaster verify --force
-  sudo: yes
-  sudo_user: "{{ aegir_user }}"
+  become: yes
+  become_user: "{{ aegir_user }}"
