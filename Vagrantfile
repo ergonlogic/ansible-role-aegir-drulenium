@@ -1,21 +1,40 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
-    v.cpus = 2
-  end
-
-  config.vm.hostname = 'aegir3drulenium.local'
+  config.vm.hostname = 'aegir-drulenium.local'
   config.vm.network 'private_network', ip: '10.55.55.56'
 
-  config.vm.provision "shell",
-    path: "tests/setup.sh",
-    keep_color: true
-  config.vm.provision "shell",
-    inline: "PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true sudo ansible-playbook /vagrant/tests/test.yml -i /vagrant/tests/inventory --connection=local --sudo",
-    keep_color: true
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024
+    vb.cpus = 2
+  end
+
+  config.vm.provision "shell" do |s|
+    s.inline = <<-SHELL
+      cd /vagrant
+      make deps-ansible
+      make ansible
+      . d
+      make ansible-playbook-test
+      #make ansible-playbook-test-idempotence
+    SHELL
+    s.env = {
+      'ANSIBLE_REQUIREMENTS' => 'tests/roles/git_requirements.yml',
+      #'ANSIBLE_REQUIREMENTS' => 'tests/roles/make_requirements.yml',
+      'ANSIBLE_ROLES_PATH'   => 'tests/roles',
+      'ANSIBLE_PLAYBOOK'     => 'tests/playbooks/git.yml',
+      #'ANSIBLE_PLAYBOOK'     => 'tests/playbooks/make.yml',
+      'PYTHONUNBUFFERED'     => '1',
+      'ANSIBLE_FORCE_COLOR'  => 'true',
+      # *N.B.* While this functionality has been implemented in Drumkit, it is
+      # currently largely broken in Ansible, due to the shift to dynamic
+      # includes in 2.0+.
+      #'START_AT_TASK' => 'Install Aegir via Debian packages.',
+    }
+    s.keep_color = true
+  end
 
 end
