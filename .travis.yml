@@ -6,10 +6,10 @@ dist: trusty
 
 env:
   global:
-    - ANSIBLE_ROLES_PATH=tests/roles
+    - ANSIBLE_ROLES_PATH=tests/roles ANSIBLE_REQUIREMENTS=tests/roles/requirements.yml
   matrix:
-    - ANSIBLE_PLAYBOOK=tests/playbooks/git.yml ANSIBLE_REQUIREMENTS=tests/roles/git_requirements.yml
-    - ANSIBLE_PLAYBOOK=tests/playbooks/make.yml ANSIBLE_REQUIREMENTS=tests/roles/make_requirements.yml
+    - ANSIBLE_PLAYBOOK=tests/playbooks/git.yml
+    - ANSIBLE_PLAYBOOK=tests/playbooks/make.yml
 
 install:
   - sudo make deps-ansible
