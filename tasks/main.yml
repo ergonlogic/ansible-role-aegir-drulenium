@@ -42,44 +42,44 @@
   shell: drush @hm vget drulenium_vr_config_server_opt --format=string
   become: yes
   become_user: "{{ aegir_user }}"
-  register: drulenium_vr_config_server_opt
+  register: drulenium_vr_config_server_opt_lookup
   changed_when: False
   failed_when: False
 
 - name: Set Drulenium server.
-  shell: drush @hm vset drulenium_vr_config_server_opt local
+  shell: "drush @hm vset drulenium_vr_config_server_opt {{ drulenium_vr_config_server_opt }}"
   become: yes
   become_user: "{{ aegir_user }}"
-  when: drulenium_vr_config_server_opt.stdout != 'local' or
-        drulenium_vr_config_server_opt.stderr == 'No matching variable found.'
+  when: drulenium_vr_config_server_opt_lookup.stdout != drulenium_vr_config_server_opt or
+        drulenium_vr_config_server_opt_lookup.stderr == 'No matching variable found.'
 
 - name: Check Drulenium server setting.
   shell: drush @hm vget drulenium_vr_config_image_server_opt --format=string
   become: yes
   become_user: "{{ aegir_user }}"
-  register: drulenium_vr_config_image_server_opt
+  register: drulenium_vr_config_image_server_opt_lookup
   changed_when: False
   failed_when: False
 
 - name: Set Drulenium image server.
-  shell: drush @hm vset drulenium_vr_config_image_server_opt local
+  shell: "drush @hm vset drulenium_vr_config_image_server_opt {{ drulenium_vr_config_image_server_opt }}"
   become: yes
   become_user: "{{ aegir_user }}"
-  when: drulenium_vr_config_image_server_opt.stdout != 'local' or
-        drulenium_vr_config_image_server_opt.stderr == 'No matching variable found.'
+  when: drulenium_vr_config_image_server_opt_lookup.stdout != drulenium_vr_config_image_server_opt or
+        drulenium_vr_config_image_server_opt_lookup.stderr == 'No matching variable found.'
 
 - name: Check ImageMagick path.
   shell: drush @hm vget drulenium_vr_release_imagemagick_path --format=string
   become: yes
   become_user: "{{ aegir_user }}"
-  register: drulenium_vr_release_imagemagick_path
+  register: drulenium_vr_release_imagemagick_path_lookup
   changed_when: False
   failed_when: False
 
 - name: Set ImageMagick path.
-  shell: drush @hm vset drulenium_vr_release_imagemagick_path /usr/bin
+  shell: "drush @hm vset drulenium_vr_release_imagemagick_path {{ drulenium_vr_release_imagemagick_path }}"
   become: yes
   become_user: "{{ aegir_user }}"
-  when: drulenium_vr_release_imagemagick_path.stdout != '/usr/bin' or
-        drulenium_vr_release_imagemagick_path.stderr == 'No matching variable found.'
+  when: drulenium_vr_release_imagemagick_path_lookup.stdout != drulenium_vr_release_imagemagick_path or
+        drulenium_vr_release_imagemagick_path_lookup.stderr == 'No matching variable found.'
 

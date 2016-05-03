@@ -22,3 +22,7 @@ drulenium_libraries:
   selenium_webdriver:
     version: master
     url: https://github.com/facebook/php-webdriver.git
+
+drulenium_vr_config_server_opt: 'local'
+drulenium_vr_config_image_server_opt: 'local'
+drulenium_vr_release_imagemagick_path: '/usr/bin'
