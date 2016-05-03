@@ -6,8 +6,8 @@
 #    depth: 1 # speeds things up
     version: "{{ item.git_repo_version }}"
     update: "{{ item.git_repo_update }}"
-  register: drulenium_module_git_repos_registered
-  with_items: "{{ drulenium_module_git_repos }}"
+  register: drulenium_modules_registered
+  with_items: "{{ drulenium_modules }}"
   become: yes
   become_user: "{{ aegir_user }}"
 

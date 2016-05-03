@@ -8,21 +8,22 @@
   when: drulenium_module_install_method == 'make'
 
 - name: Check if Aegir Drulenium modules are enabled
-  shell: "drush @hm pm-info --fields=status --format=list {{ item.project_name }} | egrep 'disabled|not installed'"
+  shell: "drush @hm pm-info --fields=status --format=list {{ item.key }} | egrep 'disabled|not installed'"
   become: True
   become_user: "{{ aegir_user }}"
   register: drulenium_modules_enabled
-  with_items: "{{ drulenium_module_git_repos }}"
+  with_dict: "{{ drulenium_modules }}"
   changed_when: False
   failed_when: False
   ignore_errors: yes
 
+- fail: msg="stop here"
 - name: Enable Aegir Drulenium modules
   command: "drush @hm --yes en {{ item.1.project_name }} --no-verify --strict=0"
   sudo: True
   sudo_user: "{{ aegir_user }}"
-  with_indexed_items: "{{ drulenium_module_git_repos }}"
   when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+  with_items: "{{ drulenium_modules_enabled.results }}"
   notify: Verify Aegir front-end
 
 - name: Check Drulenium server setting.
