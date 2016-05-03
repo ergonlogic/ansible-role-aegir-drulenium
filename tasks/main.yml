@@ -1,4 +1,17 @@
 ---
+- name: Look up Hostmaster root from Drush alias record
+  shell: "drush sa @hostmaster | grep root | cut -f4 -d\"'\""
+  register: drulenium_hostmaster_alias_root
+  become: True
+  become_user: "{{ aegir_user }}"
+  changed_when: False
+
+- name: Set default drulenium_hostmaster_root
+  set_fact:
+    drulenium_hostmaster_root: "{{ drulenium_hostmaster_alias_root.stdout }}"
+  when: drulenium_hostmaster_root is not defined
+  changed_when: False
+
 - name: Include git-based install of Drupal modules and libraries
   include: git.yml
   when: drulenium_module_install_method == 'git'
@@ -17,12 +30,11 @@
   failed_when: False
   ignore_errors: yes
 
-- fail: msg="stop here"
 - name: Enable Aegir Drulenium modules
-  command: "drush @hm --yes en {{ item.1.project_name }} --no-verify --strict=0"
-  sudo: True
-  sudo_user: "{{ aegir_user }}"
-  when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
+  command: "drush @hm --yes en {{ item.item.key }} --no-verify --strict=0"
+  become: True
+  become_user: "{{ aegir_user }}"
+  when: item.rc == 0
   with_items: "{{ drulenium_modules_enabled.results }}"
   notify: Verify Aegir front-end
 

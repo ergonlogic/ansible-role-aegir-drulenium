@@ -1,18 +1,24 @@
 ---
 aegir_user: aegir
-aegir_platform_version: 7.x-3.x
-aegir_root: /var/aegir
-php_webdriver_version: master
-php_webdriver_repo: https://github.com/facebook/php-webdriver.git
-php_webdriver_dest: selenium_webdriver
-php_webdriver_update: no
+
 drulenium_module_install_method: git
+drulenium_module_path: "sites/all/modules"
+drulenium_library_path: "sites/all/libraries"
+#drulenium_hostmaster_root: /var/aegir/hostmaster-7.x-3.x
+drulenium_drupal_git_url: https://git.drupal.org/project
+
 drulenium_modules:
   hosting_drulenium:
     version: "7.x-3.x"
+    #keep_updated: yes
+    #url: http://github.com/user
   drulenium:
     version: "7.x-1.x"
   diff:
     version: "7.x-3.2"
   libraries:
     version: "7.x-2.2"
+drulenium_libraries:
+  selenium_webdriver:
+    version: master
+    url: https://github.com/facebook/php-webdriver.git

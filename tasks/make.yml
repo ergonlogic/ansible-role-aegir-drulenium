@@ -1,23 +1,23 @@
 ---
 - name: Git clone Drupal Projects
   git:
-    repo: "https://git.drupal.org/project/{{ item.project_name }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project_name }}"
-#    depth: 1 # speeds things up
-    version: "{{ item.git_repo_version }}"
-    update: "{{ item.git_repo_update }}"
-  register: drulenium_modules_registered
-  with_items: "{{ drulenium_modules }}"
+    repo: "{{ item.value.url|default(drulenium_drupal_git_url) }}/{{ item.key }}.git"
+    dest: "{{ drulenium_hostmaster_root }}/{{ drulenium_module_path }}/{{ item.key }}"
+    depth: 1 # speeds things up
+    version: "{{ item.value.version }}"
+    update: "{{ item.value.keep_updated|default('no') }}"
+  with_dict: "{{ drulenium_modules }}"
   become: yes
   become_user: "{{ aegir_user }}"
 
 - name: Git clone Selenium WebDriver PHP bindings
   git:
-    repo: "{{ php_webdriver_repo }}"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/{{ php_webdriver_dest }}"
-    version: "{{ php_webdriver_version }}"
-    update: "{{ php_webdriver_update }}"
-  register: php_webdriver
+    repo: "{{ item.value.url }}"
+    dest: "{{ drulenium_hostmaster_root }}/{{ drulenium_library_path }}/{{ item.key }}"
+    depth: 1 # speeds things up
+    version: "{{ item.value.version }}"
+    update: "{{ item.value.keep_updated|default('no') }}"
+  with_dict: "{{ drulenium_libraries }}"
   become: yes
   become_user: "{{ aegir_user }}"
 

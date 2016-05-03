@@ -22,8 +22,7 @@ Vagrant.configure(2) do |config|
       #make ansible-playbook-test-idempotence
     SHELL
     s.env = {
-      'ANSIBLE_REQUIREMENTS' => 'tests/roles/git_requirements.yml',
-      #'ANSIBLE_REQUIREMENTS' => 'tests/roles/make_requirements.yml',
+      'ANSIBLE_REQUIREMENTS' => 'tests/roles/requirements.yml',
       'ANSIBLE_ROLES_PATH'   => 'tests/roles',
       'ANSIBLE_PLAYBOOK'     => 'tests/playbooks/git.yml',
       #'ANSIBLE_PLAYBOOK'     => 'tests/playbooks/make.yml',
