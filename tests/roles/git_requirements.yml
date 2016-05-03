@@ -1,0 +1,5 @@
+---
+- name: arknoll.selenium
+- name: ergonlogic.aegir
+- name: geerlingguy.mysql
+- name: geerlingguy.java
