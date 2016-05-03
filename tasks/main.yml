@@ -1,19 +1,11 @@
 ---
-# tasks file for ansible-role-aegir3drulenium
+- name: Include git-based install of Drupal modules and libraries
+  include: git.yml
+  when: drulenium_module_install_method == 'git'
 
-- name: GIT | Ensure GIT CLONE of Drupal Projects
-  git:
-    repo: "https://git.drupal.org/project/{{ item.project_name }}.git"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project_name }}"
-#    depth: 1 # speeds things up
-    version: "{{ item.git_repo_version }}"
-    update: "{{ item.git_repo_update }}"
-  register: drulenium_module_git_repos_registered
-  with_items: "{{ drulenium_module_git_repos }}"
-  become: yes
-  become_user: "{{ aegir_user }}"
-  when: drulenium_module_git_install
-  tags: [git, download]
+- name: Include Drush makefile-based install of Drupal modules and libraries
+  include: make.yml
+  when: drulenium_module_install_method == 'make'
 
 - name: Check if Aegir Drulenium modules are enabled
   shell: "drush @hm pm-info --fields=status --format=list {{ item.project_name }} | egrep 'disabled|not installed'"
@@ -25,9 +17,6 @@
   failed_when: False
   ignore_errors: yes
 
-- debug:
-    var: drulenium_modules_enabled
-
 - name: Enable Aegir Drulenium modules
   command: "drush @hm --yes en {{ item.1.project_name }} --no-verify --strict=0"
   sudo: True
@@ -35,17 +24,6 @@
   with_indexed_items: "{{ drulenium_module_git_repos }}"
   when: "drulenium_modules_enabled.results[{{ item.0 }}].rc == 0"
   notify: Verify Aegir front-end
-
-- name: GIT | Ensure GIT CLONE of PHP Selenium Web Driver
-  git:
-    repo: "{{ php_webdriver_repo }}"
-    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/{{ php_webdriver_dest }}"
-    version: "{{ php_webdriver_version }}"
-    update: "{{ php_webdriver_update }}"
-  register: php_webdriver
-  become: yes
-  become_user: "{{ aegir_user }}"
-  tags: [git, download, selenium, selenium_webdriver]
 
 - name: Check Drulenium server setting.
   shell: drush @hm vget drulenium_vr_config_server_opt --format=string

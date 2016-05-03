@@ -1,0 +1,23 @@
+---
+- name: Git clone Drupal Projects
+  git:
+    repo: "https://git.drupal.org/project/{{ item.project_name }}.git"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/modules/{{ item.project_name }}"
+#    depth: 1 # speeds things up
+    version: "{{ item.git_repo_version }}"
+    update: "{{ item.git_repo_update }}"
+  register: drulenium_module_git_repos_registered
+  with_items: "{{ drulenium_module_git_repos }}"
+  become: yes
+  become_user: "{{ aegir_user }}"
+
+- name: Git clone Selenium WebDriver PHP bindings
+  git:
+    repo: "{{ php_webdriver_repo }}"
+    dest: "{{ aegir_root }}/hostmaster-{{ aegir_platform_version }}/sites/all/libraries/{{ php_webdriver_dest }}"
+    version: "{{ php_webdriver_version }}"
+    update: "{{ php_webdriver_update }}"
+  register: php_webdriver
+  become: yes
+  become_user: "{{ aegir_user }}"
+
